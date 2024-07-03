@@ -1,0 +1,66 @@
+<html onclick="showCoords(event)">
+    <head>
+        <style>
+            table{
+                border-collapse: collapse;
+                height:100%;
+                aspect-ratio: 1;
+            }
+            td{
+                /* width:50px;
+                height:50px; */
+                border: 1px solid lightgray;
+            }
+            .td0{
+                background-color: black;
+                
+            }
+            .td1{
+                background-color:white;
+            }
+        </style>
+    </head>
+    <body>
+        <button onclick="reset()">reset</button> <a id="demo">N/A</a>
+        <table id="colorSpace">
+
+        </table>
+        <script>
+
+            
+            const tb = document.getElementById("colorSpace");
+            function changeColor(i,j){
+                let target = tb.children[i].children[j];
+                target.className = target.className == "td0"?"td1":"td0";
+            }
+            function reset(){
+                let iLen = tb.children.length;
+                for(let i = 0;i<iLen;i++){
+                    let jLen = tb.children[i].children.length;
+                    for(let j = 0;j<jLen;j++){
+                        tb.children[i].children[j].className = "td1"
+                    }
+                }
+            }
+            function showCoords(event) {
+                let x = event.clientX;
+                let y = event.clientY;
+                let text = "X coords: " + x + ", Y coords: " + y;
+                document.getElementById("demo").innerHTML = text;
+            }
+            //set-up
+            for(let i = 0;i<17;i++){
+                let tr = document.createElement("tr");
+                tb.appendChild(tr);
+                for(let j = 0;j<17;j++){
+                    let ti = document.createElement("td");
+                    ti.setAttribute("class", "td1");
+                    ti.setAttribute("onclick", "changeColor("+i+", "+j+")")
+                    ti.setAttribute("ondrag", "changeColor("+i+", "+j+")")
+                    tr.appendChild(ti);
+                }
+                // bod.appendChild(document.createElement("br"));
+            }
+        </script>
+    </body>
+</html>
