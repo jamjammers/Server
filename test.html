@@ -1,4 +1,4 @@
-<html onclick="showCoords(event)">
+<html onclick="showCoords(event)" onmouseup="updateDownState(false)" onmousedown="updateDownState(true)">
     <head>
         <style>
             table{
@@ -22,17 +22,27 @@
     </head>
     <body>
         <button onclick="reset()">reset</button> <a id="demo">N/A</a>
-        <table id="colorSpace">
+        <table id="colorSpace" draggable="false">
 
         </table>
         <script>
+            var mouseIsDown = false;
 
             
             const tb = document.getElementById("colorSpace");
+
+            //interact with cells
             function changeColor(i,j){
                 let target = tb.children[i].children[j];
                 target.className = target.className == "td0"?"td1":"td0";
             }
+            function changeColorEnter(i,j){
+                if(mouseIsDown){
+                    let target = tb.children[i].children[j];
+                    target.className = target.className == "td0"?"td1":"td0";
+                }
+            }
+            //reset entire board
             function reset(){
                 let iLen = tb.children.length;
                 for(let i = 0;i<iLen;i++){
@@ -42,20 +52,32 @@
                     }
                 }
             }
+            
+            //when user interacts with entire screen
             function showCoords(event) {
                 let x = event.clientX;
                 let y = event.clientY;
                 let text = "X coords: " + x + ", Y coords: " + y;
                 document.getElementById("demo").innerHTML = text;
             }
+            
+            function updateDownState(value){
+                // console.log(event.button);
+                // console.log(event)
+                mouseIsDown=value;
+            }
+
             //set-up
             for(let i = 0;i<17;i++){
                 let tr = document.createElement("tr");
+                tr.setAttribute("draggable", "false")
                 tb.appendChild(tr);
                 for(let j = 0;j<17;j++){
                     let ti = document.createElement("td");
                     ti.setAttribute("class", "td1");
                     ti.setAttribute("onclick", "changeColor("+i+", "+j+")")
+                    ti.setAttribute("onmouseenter", "changeColorEnter("+i+", "+j+")")
+                    ti.setAttribute("draggable", "false")
                     tr.appendChild(ti);
                 }
                 // bod.appendChild(document.createElement("br"));
