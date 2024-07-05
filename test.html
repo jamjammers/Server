@@ -1,4 +1,4 @@
-<html onclick="showCoords(event)" onmouseup="updateDownState(false)" onmousedown="updateDownState(true)">
+<html onmouseup="updateDownState(event, false)" onmousedown="updateDownState(event, true)" ondragstart="return false;" >
     <head>
         <style>
             table{
@@ -26,20 +26,29 @@
 
         </table>
         <script>
-            var mouseIsDown = false;
+            document.addEventListener('contextmenu', event => event.preventDefault());
+
+            var LMB = false;
+            var RMB = false;
 
             
             const tb = document.getElementById("colorSpace");
 
             //interact with cells
-            function changeColor(i,j){
+            function changeColor(i,j, event){
                 let target = tb.children[i].children[j];
-                target.className = target.className == "td0"?"td1":"td0";
+                if(event.button ==0){
+                    target.className =  "td0";
+                }else if(event.button == 2){
+                    target.className =  "td1";
+                }
             }
             function changeColorEnter(i,j){
-                if(mouseIsDown){
-                    let target = tb.children[i].children[j];
-                    target.className = target.className == "td0"?"td1":"td0";
+                let target = tb.children[i].children[j];
+                if(LMB){
+                    target.className =  "td0";
+                }else if(RMB){
+                    target.className = "td1";
                 }
             }
             //reset entire board
@@ -61,10 +70,14 @@
                 document.getElementById("demo").innerHTML = text;
             }
             
-            function updateDownState(value){
-                // console.log(event.button);
-                // console.log(event)
-                mouseIsDown=value;
+            function updateDownState(event, value){
+                console.log(event.button);
+                console.log(event)
+                if(event.button == 0){
+                    LMB=value;
+                }else if(event.button == 2){
+                    RMB=value;
+                }
             }
 
             //set-up
@@ -75,7 +88,7 @@
                 for(let j = 0;j<17;j++){
                     let ti = document.createElement("td");
                     ti.setAttribute("class", "td1");
-                    ti.setAttribute("onclick", "changeColor("+i+", "+j+")")
+                    ti.setAttribute("onmousedown", "changeColor("+i+", "+j+", event)")
                     ti.setAttribute("onmouseenter", "changeColorEnter("+i+", "+j+")")
                     ti.setAttribute("draggable", "false")
                     tr.appendChild(ti);
