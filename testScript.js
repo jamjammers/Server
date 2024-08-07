@@ -16,6 +16,7 @@ function changeColor(i,j, event){
         target.className =  "td1";
     }
 }
+
 function changeColorEnter(i,j){
     let target = tb.children[i].children[j];
     if(LMB){
@@ -24,6 +25,7 @@ function changeColorEnter(i,j){
         target.className = "td1";
     }
 }
+
 //reset entire board
 function reset(){
     let iLen = tb.children.length;
@@ -53,12 +55,37 @@ function updateDownState(event, value){
     }
 }
 
+//SQL interactions
+function cvtToColor(integer){
+    if(typeof integer == "number"){
+        let str = integer.toString(2);
+        while(str.length<32){
+            str = "0"+str
+        }
+        let newStr = ""
+        for(let i = 0;i<4;i++){
+            let concat = parseInt(str.slice(i*8,i*8+8), 2).toString()
+            while(concat.length<3){
+                concat = "0"+concat;
+            }
+            newStr += concat
+        }
+        return newStr;
+    }else{
+        return -1
+        
+    }
+}
+
+
+
+var size = 32
 //set-up
-for(let i = 0;i<17;i++){
+for(let i = 0;i<size;i++){
     let tr = document.createElement("tr");
     tr.setAttribute("draggable", "false")
     tb.appendChild(tr);
-    for(let j = 0;j<17;j++){
+    for(let j = 0;j<size;j++){
         let ti = document.createElement("td");
         ti.setAttribute("class", "td1");
         ti.setAttribute("onmousedown", "changeColor("+i+", "+j+", event)")
